@@ -1,0 +1,7 @@
+*.log
+*.mrpan
+*.uvprojx
+*.uvoptx
+/.vscode
+/Listings
+/Objects
