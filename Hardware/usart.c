@@ -1,6 +1,14 @@
 #include "usart.h"
 #include "stm32f10x.h"
 
+u8 USART_RxData;  //接收rx的数据
+u8 USART_RxFlag;  //接收标志位
+u8 USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
+//bit15，	接收完成标志
+//bit14，	接收到0x0d
+//bit13~0，	接收到的有效字节数目
+u16 USART_RX_STA=0;       //接收状态标记	
+
 void USART1_Init(u32 Baudrate){    
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1,ENABLE); //串口时钟使能 usart——》PA.9 PA.10 使能
@@ -43,13 +51,33 @@ void USART1_Init(u32 Baudrate){
 }
 
 void USART1_IRQHandler(void){
-    extern u8 Res;
     
-    if(USART_GetITStatus(USART1,USART_IT_RXNE)!=RESET){
-        Res =USART_ReceiveData(USART1);	//读取接收到的数据
-    }
+    u8 Res;
+    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
+		{
+		Res =USART_ReceiveData(USART1);	//读取接收到的数据
+		
+		if((USART_RX_STA&0x8000)==0)//接收未完成
+			{
+			if(USART_RX_STA&0x4000)//接收到了0x0d
+				{
+				if(Res!=0x0a)USART_RX_STA=0;//接收错误,重新开始
+				else USART_RX_STA|=0x8000;	//接收完成了 
+				}
+			else //还没收到0X0D
+				{	
+				if(Res==0x0d)USART_RX_STA|=0x4000;
+				else
+					{
+					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;
+					USART_RX_STA++;
+					if(USART_RX_STA>(USART_REC_LEN-1))USART_RX_STA=0;//接收数据错误,重新开始接收	  
+					}		 
+				}
+			}   		 
+     } 
     USART_ClearITPendingBit(USART1,USART_IT_RXNE); //清除中断
-    while(USART_GetFlagStatus(USART1,USART_FLAG_TC)==RESET); //等待数据发送完成,防止缓冲区溢出
 }
+
 
 

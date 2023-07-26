@@ -13,9 +13,9 @@ void OLED_I2C_Init(void)
 	GPIO_InitTypeDef GPIO_InitStructure;
  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
  	GPIO_Init(GPIOB, &GPIO_InitStructure);
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
  	GPIO_Init(GPIOB, &GPIO_InitStructure);
 	
 	OLED_W_SCL(1);
@@ -271,4 +271,24 @@ void OLED_Init(void)
 	OLED_WriteCommand(0xAF);	//开启显示
 		
 	OLED_Clear();				//OLED清屏
+}
+
+/* 显示汉字
+   x:汉字显示的横坐标
+   y:汉字显示的纵坐标
+   no:选择要显示的汉字在字模中的位置
+*/
+void OLED_ShowCHinese(u8 Line,u8 Column,u8 no)
+{      			    
+	uint8_t i;
+	OLED_SetCursor((Line - 1) * 2, (Column - 1) * 8);		//设置光标位置在上半部分
+	for (i = 0; i < 16; i++)
+	{
+		OLED_WriteData(Hzk[2*no][i]);			//显示上半部分内容
+	}
+	OLED_SetCursor((Line - 1) * 2 + 1, (Column - 1) * 8);	//设置光标位置在下半部分
+	for (i = 0; i < 16; i++)
+	{
+		OLED_WriteData(Hzk[2*no+1][i]);		//显示下半部分内容
+	}					
 }
