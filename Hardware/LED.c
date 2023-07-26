@@ -10,5 +10,5 @@ void LED_Init(void){
     GPIO_InitTypeDefStrue.GPIO_Speed=GPIO_Speed_50MHz;
     GPIO_Init(GPIOC,&GPIO_InitTypeDefStrue);  //配置GPIOC_PIN_13 推挽输出
 
-    GPIO_WriteBit(GPIOC,GPIO_Pin_13,1); //默认高电平
+    GPIO_WriteBit(GPIOC,GPIO_Pin_13,Bit_SET); //默认高电平
 }
