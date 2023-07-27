@@ -14,7 +14,6 @@ void MOTOR_Back(u16 speed);
 void MOTOR_Left(u16 speed);
 void MOTOR_Right(u16 speed);
 void MOTOR_Stop(void);
+void MOTO_Control(u8 *temp);
 
-void MOTOR_Init0(void);
-void motorforward(void);
 #endif

@@ -1,5 +1,6 @@
 #include "motor.h"
 #include "stm32f10x.h"
+#include "delay.h"
 
 void MOTOR_Init(void){  //pwm
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);
@@ -79,27 +80,19 @@ void MOTOR_Right(u16 speed){
 void MOTOR_Stop(void){
     TIM_SetCompare1(TIM4,0);
     TIM_SetCompare2(TIM4,0);
-    TIM_SetCompare1(TIM4,0);
-    TIM_SetCompare2(TIM4,0);
+    TIM_SetCompare3(TIM4,0);
+    TIM_SetCompare4(TIM4,0);
+    TIM_SetCompare1(TIM3,0);
+    TIM_SetCompare2(TIM3,0);
+    TIM_SetCompare3(TIM3,0);
+    TIM_SetCompare4(TIM3,0);
 }
 
-
-void MOTOR_Init0(void){  //全速前进
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
-
-    
-    GPIO_InitTypeDef GPIO_InitTypeDefStrue;
-    GPIO_InitTypeDefStrue.GPIO_Pin=GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9;
-    GPIO_InitTypeDefStrue.GPIO_Mode=GPIO_Mode_Out_PP;
-    GPIO_InitTypeDefStrue.GPIO_Speed=GPIO_Speed_50MHz;
-    GPIO_Init(GPIOB,&GPIO_InitTypeDefStrue);  //GPIO_Pin_6|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9 初始化，因为用到定时器-》GPIO_Mode_AF_PP。
-}
-void motorforward(void){
-    GPIO_SetBits(GPIOB,GPIO_Pin_6);
-    GPIO_ResetBits(GPIOB,GPIO_Pin_7);
-    
-    GPIO_SetBits(GPIOB,GPIO_Pin_8);
-    GPIO_ResetBits(GPIOB,GPIO_Pin_9);
+void MOTO_Control(u8 *temp){
+        if(temp[0]=='1' && (u16)temp[1]=='1' && (u16)temp[2]=='1'){MOTOR_Forward(500);}
+        else if(temp[0]=='0' && temp[1]=='1' && temp[2]=='1'){MOTOR_Back(500);delay_ms(1000);}
+        else if(temp[0]=='1' && temp[1]=='0' && temp[2]=='1'){MOTOR_Left(500);}
+        else if(temp[0]=='1' && temp[1]=='1' && temp[2]=='0'){MOTOR_Right(500);}
+        else{MOTOR_Stop();}
 }
 
