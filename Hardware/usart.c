@@ -9,22 +9,22 @@ u8 USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
 //bit13~0，	接收到的有效字节数目
 u16 USART_RX_STA=0;       //接收状态标记	
 
-void USART1_Init(u32 Baudrate){    
+void USART2_Init(u32 Baudrate){    
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1,ENABLE); //串口时钟使能 usart——》PA.9 PA.10 使能
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE); //串口时钟使能 usart——》PA.2 PA.3 使能
 
-    USART_DeInit(USART1);//串口复位
+    USART_DeInit(USART2);//串口复位
 
     GPIO_InitTypeDef GPIO_InitTypeDefStrue;
 
     //USART_TX 配置
-    GPIO_InitTypeDefStrue.GPIO_Pin=GPIO_Pin_9;
+    GPIO_InitTypeDefStrue.GPIO_Pin=GPIO_Pin_2;
     GPIO_InitTypeDefStrue.GPIO_Mode=GPIO_Mode_AF_PP;
     GPIO_InitTypeDefStrue.GPIO_Speed=GPIO_Speed_50MHz;
     GPIO_Init(GPIOA,&GPIO_InitTypeDefStrue);
 
     //USART_RX 配置
-    GPIO_InitTypeDefStrue.GPIO_Pin=GPIO_Pin_10;
+    GPIO_InitTypeDefStrue.GPIO_Pin=GPIO_Pin_3;
     GPIO_InitTypeDefStrue.GPIO_Mode=GPIO_Mode_IPU;
     GPIO_Init(GPIOA,&GPIO_InitTypeDefStrue);
 
@@ -36,26 +36,26 @@ void USART1_Init(u32 Baudrate){
     USART_InitTypeDefStrue.USART_Parity=USART_Parity_No;
     USART_InitTypeDefStrue.USART_StopBits=USART_StopBits_1;
     USART_InitTypeDefStrue.USART_WordLength=USART_WordLength_8b;
-    USART_Init(USART1,&USART_InitTypeDefStrue);  //初始化串口1
+    USART_Init(USART2,&USART_InitTypeDefStrue);  //初始化串口1
 
     NVIC_InitTypeDef NVIC_InitStructure;
-    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=2 ;//抢占优先级2
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;		//子优先级2
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化NVIC寄存器
     
     //usart使能
-    USART_Cmd(USART1,ENABLE);
-    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//USART1 每次接收到一个字节,触发中断
+    USART_Cmd(USART2,ENABLE);
+    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//USART1 每次接收到一个字节,触发中断
 }
 
-void USART1_IRQHandler(void){
+void USART2_IRQHandler(void){
     
     u8 Res;
-    if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
+    if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
 		{
-		Res =USART_ReceiveData(USART1);	//读取接收到的数据
+		Res =USART_ReceiveData(USART2);	//读取接收到的数据
 		
 		if((USART_RX_STA&0x8000)==0)//接收未完成
 			{
@@ -76,7 +76,7 @@ void USART1_IRQHandler(void){
 				}
 			}   		 
      } 
-    USART_ClearITPendingBit(USART1,USART_IT_RXNE); //清除中断
+    USART_ClearITPendingBit(USART2,USART_IT_RXNE); //清除中断
 }
 
 
