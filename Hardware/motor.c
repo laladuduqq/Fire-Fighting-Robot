@@ -30,7 +30,7 @@ void MOTOR_Init(void){  //pwm
     TIM_OC1Init(TIM4,&TIM_OCInitTypeDefStrue);
     TIM_OC2Init(TIM4,&TIM_OCInitTypeDefStrue);
     TIM_OC3Init(TIM4,&TIM_OCInitTypeDefStrue);
-    TIM_OC4Init(TIM4,&TIM_OCInitTypeDefStrue);//TIM3,TIM4 (CH3 CH4) PWM 输出
+    TIM_OC4Init(TIM4,&TIM_OCInitTypeDefStrue);//TIM4 PWM 输出
 
     TIM_OC1PreloadConfig(TIM4,TIM_OCPreload_Enable);
     TIM_OC2PreloadConfig(TIM4,TIM_OCPreload_Enable);
@@ -53,7 +53,7 @@ void MOTOR_Init(void){  //pwm
 
 void MOTOA_SET(u8 dir,u16 speed){  //dir->方向（0->反向 1->正向）speed->电机转速
     if(speed>100) speed=100;
-    if(dir){
+    if(dir==1){
        TIM_SetCompare1(TIM4,speed);
        TIM_SetCompare2(TIM4,0);
     }else{
@@ -64,7 +64,7 @@ void MOTOA_SET(u8 dir,u16 speed){  //dir->方向（0->反向 1->正向）speed->
 
 void MOTOB_SET(u8 dir,u16 speed){  //dir->方向（0->反向 1->正向）speed->电机转速
     if(speed>100) speed=100;
-    if(dir){
+    if(dir==1){
        TIM_SetCompare3(TIM4,speed);
        TIM_SetCompare4(TIM4,0);
     }else{
@@ -84,12 +84,13 @@ void MOTOR_Back(u16 speed){
 }
 
 void MOTOR_Left(u16 speed){
-    MOTOA_SET(1,speed);
-    MOTOB_SET(0,speed);
+  MOTOA_SET(1,speed);
+  MOTOB_SET(0,0);
+    
 }
 
 void MOTOR_Right(u16 speed){
-    MOTOA_SET(0,speed);
+    MOTOA_SET(0,0);
     MOTOB_SET(1,speed);
 }
 
@@ -100,7 +101,7 @@ void MOTOR_Stop(void){
     TIM_SetCompare2(TIM4,0);
 }
 
-void MOTO_Control(u8 *temp){
+void MOTO_Control(char *temp){
         if(temp[0]=='1' && (u16)temp[1]=='1' && (u16)temp[2]=='1'){MOTOR_Forward(90);}
         else if(temp[0]=='0' && temp[1]=='1' && temp[2]=='1'){MOTOR_Back(60);}
         else if(temp[0]=='1' && temp[1]=='0' && temp[2]=='1'){MOTOR_Left(60);}

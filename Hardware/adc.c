@@ -1,6 +1,7 @@
 #include "stm32f10x.h"                  // Device header
 #include "adc.h"
 #include "delay.h"
+//配置红外传感器
 void Adc_Init(void){
     ADC_InitTypeDef ADC_InitStructure; 
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -10,7 +11,7 @@ void Adc_Init(void){
 
 	RCC_ADCCLKConfig(RCC_PCLK2_Div6);   //设置ADC分频因子6 72M/6=12,ADC最大时间不能超过14M
 
-	//PA1 作为模拟通道输入引脚                         
+	//PA.0 PA.1 PA.4 作为模拟通道输入引脚                         
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;		//模拟输入引脚
 	GPIO_Init(GPIOA, &GPIO_InitStructure);	
