@@ -12,6 +12,7 @@
 int main(void){
 	u8 t,len,i;
 	u8 temp[8]={'0'};
+	u16 adcx1,adcx2,adcx3;
 	LED_Init();
 	OLED_Init();
 	delay_init(); 
@@ -19,6 +20,7 @@ int main(void){
 	USART2_Init(115200);  //USART2 波特率 115200
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
 	Encoder_Init();
+	Adc_Init();
 	while(1){
 		LEDON;
 		delay_ms(500);
@@ -34,14 +36,19 @@ int main(void){
 				while(USART_GetFlagStatus(USART2,USART_FLAG_TC)!=SET);//等待发送结束
 				OLED_Clear();
 				//OLED_ShowString(1, 1, "UARTRX:");
-				OLED_ShowString(1, 1, temp);
-				OLED_ShowString(2, 1, USART_RX_BUF);
+				//OLED_ShowString(1, 1, temp);
+				//OLED_ShowString(2, 1, USART_RX_BUF);
 			}
 			USART_RX_STA=0;
 		}
-		MOTO_Control(temp);
-		OLED_ShowSignedNum(3,1,Encoder_GetTIM3(),5);
-		OLED_ShowSignedNum(4,1,Encoder_GetTIM1(),5);
+		//MOTO_Control(temp);
+		adcx1=Get_Adc_Average(ADC_Channel_0,10);
+		adcx2=Get_Adc_Average(ADC_Channel_1,10);
+		adcx3=Get_Adc_Average(ADC_Channel_4,10);
+		OLED_ShowNum(1,1,adcx1,4);
+		OLED_ShowNum(2,1,adcx2,4);
+		OLED_ShowNum(3,1,adcx3,4);
+		OLED_ShowString(4, 1, "ADCtest");
 		
 		
 	}
