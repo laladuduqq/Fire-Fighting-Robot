@@ -13,6 +13,7 @@
 
 
 int main(void){
+	u8 t;
 	u16 adcx1,adcx2,adcx3;
 	extern u8 RXD2BUF[RXD2_BUF_SIZE];
 	extern int flag;
@@ -27,19 +28,29 @@ int main(void){
 	Adc_Init();
 	while(1){
 		LEDON;
+		t++;
 		adcx1=Get_Adc_Average(ADC_Channel_0,2);
 		adcx2=Get_Adc_Average(ADC_Channel_1,2);
 		adcx3=Get_Adc_Average(ADC_Channel_4,2);
 		OLED_ShowNum(1,1,adcx1,4);
 		OLED_ShowNum(2,1,adcx2,4);
 		OLED_ShowNum(3,1,adcx3,4);
+		if(t==100){
+		printf("adcx1:%d\r\n",adcx1);
+		printf("adcx2:%d\r\n",adcx2);
+		printf("adcx3:%d\r\n",adcx3);
+		t=0;
+		}
 		if(flag==1){
-			if(RXD2BUF[0]=='@'){printf("接收到的数据:%s",RXD2BUF);}
-			else{printf("数据错误,请重新传输.");}
+			if(RXD2BUF[0]=='@'){printf("接收到的数据:%s\r\n",RXD2BUF);}
+			else{printf("数据错误,请重新传输.\r\n");}
 			OLED_ShowString(4,1,RXD2BUF);
+			if(RXD2BUF[1]=='0'){MOTO_Control(RXD2BUF);}
+			else{linewalk(adcx1,adcx2,adcx3);}
 			memset(RXD2BUF,0,200);
 			flag=0;
 		}
+		
 		
 	}
 }

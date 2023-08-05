@@ -102,10 +102,10 @@ void MOTOR_Stop(void){
 }
 
 void MOTO_Control(char *temp){
-        if(temp[0]=='1' && (u16)temp[1]=='1' && (u16)temp[2]=='1'){MOTOR_Forward(90);}
-        else if(temp[0]=='0' && temp[1]=='1' && temp[2]=='1'){MOTOR_Back(60);}
-        else if(temp[0]=='1' && temp[1]=='0' && temp[2]=='1'){MOTOR_Left(60);}
-        else if(temp[0]=='1' && temp[1]=='1' && temp[2]=='0'){MOTOR_Right(60);}
+        if(temp[2]=='1' && temp[3]=='1' && temp[4]=='1'){MOTOR_Forward(90);}
+        else if(temp[2]=='0' && temp[3]=='1' && temp[4]=='1'){MOTOR_Back(60);}
+        else if(temp[2]=='1' && temp[3]=='0' && temp[4]=='1'){MOTOR_Left(60);}
+        else if(temp[2]=='1' && temp[3]=='1' && temp[4]=='0'){MOTOR_Right(60);}
         else{MOTOR_Stop();}
 }
 
