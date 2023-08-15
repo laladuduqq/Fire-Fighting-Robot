@@ -96,8 +96,8 @@ void USART2_IRQHandler(void)
 	if(USART_GetITStatus(USART2, USART_IT_IDLE) != RESET)//Idle interrupt set
 	{
 		// Clear idle interrupt 
-		USART1->SR;//Read state register
-		USART1->DR;//Read data register 
+		USART2->SR;//Read state register
+		USART2->DR;//Read data register
 		USART_GetITStatus(USART2, USART_IT_IDLE);//Get idle interrupt state
 		USART_ReceiveData(USART2);//Get USARTx received data
 
