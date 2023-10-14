@@ -3,7 +3,7 @@
 
 void Encoder_Init(void){
     
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3 , ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_TIM1, ENABLE);
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -26,22 +26,26 @@ void Encoder_Init(void){
 	TIM_ICInitTypeDef TIM_ICInitStructure; 
 	TIM_ICStructInit(&TIM_ICInitStructure);
 	TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
-	TIM_ICInitStructure.TIM_ICFilter = 10;
+	TIM_ICInitStructure.TIM_ICFilter = 0XF;
 	TIM_ICInit(TIM3, &TIM_ICInitStructure);
 	TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
-	TIM_ICInitStructure.TIM_ICFilter = 10;
+	TIM_ICInitStructure.TIM_ICFilter = 0XF;
 	TIM_ICInit(TIM3, &TIM_ICInitStructure);
 	TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
-	TIM_ICInitStructure.TIM_ICFilter = 10;
+	TIM_ICInitStructure.TIM_ICFilter = 0XF;
 	TIM_ICInit(TIM1, &TIM_ICInitStructure);
 	TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
-	TIM_ICInitStructure.TIM_ICFilter = 10;
+	TIM_ICInitStructure.TIM_ICFilter = 0XF;
 	TIM_ICInit(TIM1, &TIM_ICInitStructure);
 	
+	TIM_ARRPreloadConfig(TIM1,ENABLE);
+	TIM_ARRPreloadConfig(TIM3,ENABLE);
 	
 	TIM_EncoderInterfaceConfig(TIM3, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising); //电平不反转
     TIM_EncoderInterfaceConfig(TIM1, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising); //电平不反转
 
+	TIM3->CNT=0;
+	TIM1->CNT=0;
     TIM_Cmd(TIM3,ENABLE);
 	TIM_Cmd(TIM1,ENABLE);
 

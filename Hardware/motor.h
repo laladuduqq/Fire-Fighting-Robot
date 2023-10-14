@@ -10,5 +10,7 @@ void MOTOR_Left(u16 speed);
 void MOTOR_Right(u16 speed);
 void MOTOR_Stop(void);
 void MOTO_Control(char *temp);
+void MOTOA_SET(u8 dir,u16 speed);
+void MOTOB_SET(u8 dir,u16 speed);
 
 #endif
