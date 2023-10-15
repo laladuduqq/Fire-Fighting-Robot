@@ -40,21 +40,26 @@ void sg90_init(void){
 }
 
 void avoid_control(void){
-			length=HCSR04GetLength();
-			delay_ms(500);//等待length稳定
+		delay_ms(500);//等待length稳定
+        length=HCSR04GetLength();
         if(length<100){
+
             TIM_SetCompare2(TIM2,14);//正向最小转速
             delay_ms(300);
             TIM_SetCompare2(TIM2,15);//速度为0
+            delay_ms(500);
             while(i!=5){llengthtemp+=length;i=i+1;}
             llength=llengthtemp/5;  //左边距离判断
             i=0;
+
             TIM_SetCompare2(TIM2,16);//正向最小转速
             delay_ms(550);
             TIM_SetCompare2(TIM2,15);//速度为0
+            delay_ms(500);
             while(i!=5){rlengthtemp+=length;i=i+1;}
             rlength=rlengthtemp/5;  //右边距离判断
             i=0;
+            
             TIM_SetCompare2(TIM2,14);//正向最小转速
             delay_ms(300);          //回正
             TIM_SetCompare2(TIM2,15);
