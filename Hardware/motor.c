@@ -103,9 +103,9 @@ void MOTOR_Stop(void){
 
 void MOTO_Control(char *temp){
         if(temp[2]=='1' && temp[3]=='1' && temp[4]=='1'){MOTOR_Forward(90);}
-        else if(temp[2]=='0' && temp[3]=='1' && temp[4]=='1'){MOTOR_Back(60);}
-        else if(temp[2]=='1' && temp[3]=='0' && temp[4]=='1'){MOTOR_Left(60);}
-        else if(temp[2]=='1' && temp[3]=='1' && temp[4]=='0'){MOTOR_Right(60);}
+        else if(temp[2]=='0' && temp[3]=='1' && temp[4]=='1'){MOTOR_Back(80);}
+        else if(temp[2]=='1' && temp[3]=='0' && temp[4]=='1'){MOTOR_Left(80);}
+        else if(temp[2]=='1' && temp[3]=='1' && temp[4]=='0'){MOTOR_Right(80);}
         else{MOTOR_Stop();}
 }
 
